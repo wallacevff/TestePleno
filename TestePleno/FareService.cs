@@ -9,7 +9,12 @@ namespace TestePleno.Services
 {
     public class FareService
     {
-        private Repository _repository = new Repository();
+        Repository _repository;
+        
+        public FareService(Repository repository)
+        {
+            _repository = repository;
+        }
 
         public void Create(Fare fare)
         {

@@ -9,8 +9,11 @@ namespace TestePleno.Services
 {
     public class OperatorService
     {
-        public Repository _repository = new Repository();
-
+        private readonly Repository _repository;
+        public OperatorService(Repository repository)
+        {
+            _repository = repository;
+        }
         public Operator GetOperatorByCode(string code)
         {
             List<Operator> operators = _repository.GetAll<Operator>();

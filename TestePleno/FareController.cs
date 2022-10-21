@@ -13,10 +13,10 @@ namespace TestePleno.Controllers
         private OperatorService _operatorService;
         private FareService FareService;
 
-        public FareController()
+        public FareController(Repository _repository)
         {
-            _operatorService = new OperatorService();
-            FareService = new FareService();
+            _operatorService = new OperatorService(_repository);
+            FareService = new FareService(_repository);
         }
 
         public void CreateFare(Fare fare, string operatorCode)

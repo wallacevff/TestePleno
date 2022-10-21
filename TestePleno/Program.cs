@@ -13,6 +13,7 @@ namespace TestePleno
     {
         static void Main(string[] args)
         {
+            Repository _repository = new Repository();
             while (true)
             {
                 try
@@ -79,7 +80,7 @@ namespace TestePleno
                     Console.WriteLine("Informe o código da operadora para a tarifa:");
                     Console.WriteLine("Exemplos: OP01, OP02, OP03...");
                     string operatorCodeInput = Console.ReadLine();
-                    FareController fareController = new FareController();
+                    FareController fareController = new FareController(_repository);
                     fareController.CreateFare(fare, operatorCodeInput);
                     Console.WriteLine("Tarifa cadastrada com sucesso!");
                     //Console.Read();
