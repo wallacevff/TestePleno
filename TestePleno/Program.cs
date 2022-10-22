@@ -1,12 +1,6 @@
-﻿using System;
-
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TestePleno.Controllers;
-using TestePleno.Models;
+﻿using TestePleno.Controllers;
 using TestePleno.Services;
+
 namespace TestePleno
 {
     class Program
@@ -14,96 +8,31 @@ namespace TestePleno
         static void Main(string[] args)
         {
             Repository _repository = new Repository();
-            while (true)
-            {
-                try
-                {
-                    /*
-                    Console.Write("Escolha a Opção Desejada:\r\n[1] => Cadastrar Tarifa" +
-                        "\r\n[2] => Cadastrar Operadora" +
-                        "\r\n[3] => Atualizar Tarifa" +
-                        "\r\n[4] => Atualizar Operadora" +
-                        "\r\n[5] => Remover Tarifa" +
-                        "\r\n[6] => Remover Operadora\r\n\r\nOpção Desejada: ");
-                    int opcao = int.Parse(Console.ReadLine());
-
-                    switch (opcao)
-                    {
-                        case 1:
-                            Console.WriteLine("Informe o valor da tarifa a ser cadastrada:");
-                            string fareValueInput = Console.ReadLine();
-                            Fare fare = new Fare();
-                            fare.Id = Guid.NewGuid();
-                            fare.Value = convertDecimal(fareValueInput);
-                            Console.WriteLine("Informe o código da operadora para a tarifa:");
-                            Console.WriteLine("Exemplos: OP01, OP02, OP03...");
-                            string operatorCodeInput = Console.ReadLine();
-                            FareController fareController = new FareController();
-                            fareController.CreateFare(fare, operatorCodeInput);
-                            Console.WriteLine("Tarifa cadastrada com sucesso!");
-                            Console.Read();
-                            break;
-
-                        case 2:
-                            Console.WriteLine();
-                            break;
-
-                        default:
-                            Console.WriteLine("Opção inválida! Selecione uma destre as opções acima.");
-                            break;
-                    }
-
-
-                    Console.WriteLine("Informe o valor da tarifa a ser cadastrada:");
-                    string fareValueInput = Console.ReadLine();
-                    Fare fare = new Fare();
-                    fare.Id = Guid.NewGuid();
-                    fare.Value = convertDecimal(fareValueInput);
-                    Console.WriteLine("Informe o código da operadora para a tarifa:");
-                    Console.WriteLine("Exemplos: OP01, OP02, OP03...");
-                    string operatorCodeInput = Console.ReadLine();
-                    FareController fareController = new FareController();
-                    fareController.CreateFare(fare, operatorCodeInput);
-                    Console.WriteLine("Tarifa cadastrada com sucesso!");
-                    Console.Read();
-                    */
-                    // Guid guid = Guid.NewGuid();
-                    // DateTime date = DateTime.Now;
-                    //date.AddMonths(1);
-                    //Console.WriteLine(date.AddMonths(-1));
-
-                    Console.WriteLine("Informe o valor da tarifa a ser cadastrada:");
-                    string fareValueInput = Console.ReadLine();
-                    Fare fare = new Fare();
-                    fare.Id = Guid.NewGuid();
-                    fare.Value = convertDecimal(fareValueInput);
-                    Console.WriteLine("Informe o código da operadora para a tarifa:");
-                    Console.WriteLine("Exemplos: OP01, OP02, OP03...");
-                    string operatorCodeInput = Console.ReadLine();
-                    FareController fareController = new FareController(_repository);
-                    fareController.CreateFare(fare, operatorCodeInput);
-                    Console.WriteLine("Tarifa cadastrada com sucesso!");
-                    //Console.Read();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    break;
-                }
-            }
+            FareController fareController = new FareController(_repository);
+            OperatorController operatorController = new OperatorController(_repository);
+            Startup.StartProgram(fareController, operatorController);            
         }
-        static decimal convertDecimal(string value)
-        {
-            decimal intVal;
-            try
-            {
-                intVal = decimal.Parse(value);
-            }
-            catch (Exception e)
-            {
-                throw new ArgumentException("O Valor digitado não é um número, apenas números são aceitos.");
-            }
-            return intVal;
-        }
+
+        
     }
+
 }
+/*
+    O primeiro problema a ser solucionado, foi referente a classe Fare que não implementava
+a interface IModel, causando conflito com as operações definidas com a classe repository.
+Outra questão que foi tratada, foi na criação do cadastro da Fare que precisava possuir
+dois valores, OperatorId e Status. O tratamento para o OperatorId foi o seguinte, realizava-se
+a busca no banco de dados referente ao registro do Operator utilizando o Code para a pesquisa,
+caso não fosse encontrado nenhum Operator, um novo cadastro seria realizado. A classe Fare
+teve uma propriedade adicionada CreatedAt do tipo DateTime para que fosse possível adicionar
+a regra de negócio referente ao cadastro de Fare com o mesmo Value, OperatorId e 180 dias 
+(6 meses) em relação ao cadastro atual, a classe Operator também teve uma propriedade
+CreatedAt aducionada para controles futuros.Tiveram que ser adicionadas injeções de 
+dependência nos Services e Controllers da aplicação, pois antes, um novo banco era criado 
+para cada novo cadastro realizado.
+    Foram realizados tratamentos de Excessões nos inputs da aplicação para mensagens
+compreensíveis aos usuários. Foi criada uma classe Startup para tornar mais fácil os testes que
+foram aplicados, permitindo também que a função Main ficasse mais limpa.
+    Por fim, foram implementadas as demais funcionalidades do sistema: Listar, Atualizar e Remover.
+
+*/

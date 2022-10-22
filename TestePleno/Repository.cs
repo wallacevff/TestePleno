@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TestePleno.Models;
 
 namespace TestePleno.Services
@@ -31,6 +29,11 @@ namespace TestePleno.Services
 
             _fakeDatabase.Remove(updatingModel);
             _fakeDatabase.Add(model);
+        }
+
+        public void Delete(IModel model)
+        {
+            _fakeDatabase.Remove(model);
         }
 
         public T GetById<T>(Guid id)

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TestePleno.Models;
 
 namespace TestePleno.Services
@@ -25,6 +23,11 @@ namespace TestePleno.Services
         {
             _repository.Update(fare);
         }
+        
+        public void Remove(Fare fare)
+        {
+            _repository.Delete(fare);
+        }
 
         public Fare GetFareById(Guid fareId)
         {
@@ -35,13 +38,15 @@ namespace TestePleno.Services
         public List<Fare> GetFares()
         {
             var fares = _repository.GetAll<Fare>();
+
             return fares;
         }
         public bool HasSimilarActiveFares(Fare fare)
         {
            List<Fare> fares = this.GetFares().Where(f => f.Value == fare.Value &&
+           f.OperatorId == fare.OperatorId && f.Id != fare.Id &&
                 f.Status == 1 && (fare.CreatedAt - f.CreatedAt).Days <= 180 ).ToList();
-            Console.WriteLine(fares.FirstOrDefault());
+            
             if(fares.Count > 0)
             {
                 return true;

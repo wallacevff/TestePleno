@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TestePleno.Models;
 using TestePleno.Services;
+using System.Linq;
 
 namespace TestePleno.Controllers
 {
@@ -24,25 +22,66 @@ namespace TestePleno.Controllers
             Operator selectedOperator = _operatorService.GetOperatorByCode(operatorCode);
             if (selectedOperator == null)
             {
-                Console.WriteLine("cadastro de operator");
                 selectedOperator = new Operator() { Id = Guid.NewGuid(), Code = operatorCode };
                 _operatorService.Create(selectedOperator);
             }
             fare.OperatorId = selectedOperator.Id;
-            /*
+
             if (FareService.HasSimilarActiveFares(fare))
             {
-
-                Console.WriteLine("Já existe Tarifa cadastrada ativa com este valor e operadora.");
-            } */
-            FareService.Create(fare);
-
-            List<Fare> fars = FareService.GetFares();
-            foreach (Fare fare1 in fars)
-            {
-                Console.WriteLine($"Operadora: {fare1.OperatorId}, Valor: {fare1.Value}");
+                throw new ArgumentException("Já existe Tarifa cadastrada ativa com este valor e operadora.");
             }
+            FareService.Create(fare);
+          
+        }
+
+        public void UpdateFare(Fare updatedFare)
+        {
             
+            Operator selectedOperator = _operatorService.GetOperatorById(updatedFare.OperatorId);
+            if (selectedOperator == null)
+            {
+                throw new ArgumentException("Essa operadora não está cadastrada.");
+            }
+
+            if (FareService.HasSimilarActiveFares(updatedFare))
+            {
+                throw new ArgumentException("Já existe Tarifa cadastrada ativa com este valor e operadora.");
+            }
+            updatedFare.UpdateDate();
+            FareService.Update(updatedFare);
+
+        }
+
+        public Fare GetFareById(Guid id)
+        {
+            Fare fare = FareService.GetFareById(id);
+            if (fare == null)
+            {
+                throw new ArgumentException("Tarifa não encontrada.");
+            }
+            return fare;
+        }
+
+        public List<Fare> ListFares()
+        {
+            List<Fare> fares = FareService.GetFares();
+            fares.ForEach(fa => fa.Operator = _operatorService.GetOperatorById(fa.OperatorId));
+            fares = fares.OrderBy(fa => fa.Operator.Code).ToList();
+            return fares;
+        }
+
+        public void DeleteFare(Fare fare)
+        {
+            FareService.Remove(fare);
+        }
+
+        public void ShowFares()
+        {
+            foreach (Fare fare in ListFares())
+            {
+                Console.WriteLine(fare);
+            }
         }
     }
 }

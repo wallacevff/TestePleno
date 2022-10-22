@@ -40,8 +40,13 @@ namespace TestePleno.Services
         }
 
         public void Update(Operator updatingOperator)
-        {
+        {            
             _repository.Update(updatingOperator);
+        }
+
+        public void Remove(Operator updatingOperator)
+        {
+            _repository.Delete(updatingOperator);
         }
     }
 }
