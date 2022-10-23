@@ -41,7 +41,7 @@ namespace TestePleno.Controllers
             Operator selectedOperator = _operatorService.GetOperatorById(updatedFare.OperatorId);
             if (selectedOperator == null)
             {
-                throw new ArgumentException("Essa operadora não está cadastrada.");
+                _operatorService.Create(selectedOperator);
             }
 
             if (FareService.HasSimilarActiveFares(updatedFare))

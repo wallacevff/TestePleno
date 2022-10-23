@@ -34,5 +34,12 @@ para cada novo cadastro realizado.
 compreensíveis aos usuários. Foi criada uma classe Startup para tornar mais fácil os testes que
 foram aplicados, permitindo também que a função Main ficasse mais limpa.
     Por fim, foram implementadas as demais funcionalidades do sistema: Listar, Atualizar e Remover.
+    
+**** Observação ****
+* A lógica de cadastramento de Operadoras foi incluso nas operações de criação e atualização da Tarifa.
+* Caso uma Tarifa seja criada, é verificada a existência de uma Operadora na base de dados,
+* caso a Operadora não exista, será cadastrada uma nova. O mesmo acontece na atualização da Tarifa.
+* No caso de exclusão de uma Operadora, caso existam Tarifas vinculadas, um aviso será exibido ao usuário e
+* a exclusão só será realizada caso não hajam Tarifas vinculadas a ela.
 
 */

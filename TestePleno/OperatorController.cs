@@ -18,6 +18,11 @@ namespace TestePleno.Controllers
             this._fareService = new FareService(repository);
         }
 
+        public void CreateOperator(Operator op)
+        {
+            _operatorService.Create(op);
+        }
+
         public List<Operator> ListOperators()
         {
             return _operatorService.GetOperators().OrderBy(op => op.Code).ToList();
